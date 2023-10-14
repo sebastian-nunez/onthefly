@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import tripRoutes from "./routes/trips.js";
+import activityRoutes from "./routes/activities.js";
 
 const PORT = process.env.PORT || 3001;
 
@@ -12,6 +13,7 @@ app.use(express.json()); // use JSON
 app.use(cors());
 
 app.use("/api/trips", tripRoutes);
+app.use("/api/activities", activityRoutes);
 
 app.get("/", (req, res) => {
   res
