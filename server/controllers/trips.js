@@ -61,7 +61,7 @@ const getTrip = async (req, res) => {
 };
 
 //updating a trip
-const updateTrip = async (request, response) => {
+const updateTrip = async (req, res) => {
   const updateQuery = `
     UPDATE trips
     SET title = $1, description = $2, img_url = $3, num_days = $4, start_date = $5, end_date = $6, total_cost= $7
@@ -100,15 +100,22 @@ const updateTrip = async (request, response) => {
 
 //deleting a trip
 const deleteTrip = async (req, res) => {
-  const deleteQuery = `
+  const activityDeleteQuery = `
     DELETE FROM activities
-    WHERE trip_id = $1`;
+    WHERE trip_id = $1
+  `;
+
+  const deleteTripQuery = `
+    DELETE FROM trips
+    WHERE id = $1
+  `;
 
   try {
     const id = parseInt(req.params.id);
+    const activity_deletion = await pool.query(activityDeleteQuery, [id]);
 
-    const results = await pool.query(deleteQuery, [id]);
-    res.status(200).json(results.rows);
+    const results = await pool.query(deleteTripQuery, [id]);
+    res.status(200).json(results.rows[0]);
   } catch (error) {
     res.status(409).json({ error: error.message });
   }
